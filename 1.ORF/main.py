@@ -30,6 +30,7 @@ def find_largest_polypeptide_in_DNA(seq, translationTable=1):
                     trans = ''
     return Data
 
+
 def random_dna_sequence(length):
     """Function generate random DNA with a certain probability"""
     return ''.join(np.random.choice(BASES, p=P) for _ in range(int(length)))
@@ -60,4 +61,9 @@ AT = (1 - frequency / 100) / 2
 """Probability. Rule of molecular biology"""
 P = [AT, CG, AT, CG]
 
-print(find_largest_polypeptide_in_DNA(random_dna_sequence(length)))
+RESULTS = find_largest_polypeptide_in_DNA(random_dna_sequence(length))
+print("TRANSLATION= ", RESULTS[0], "\nLength= ", RESULTS[2]
+      , "\nFirstBP= ", RESULTS[3], "\nLastBP= ",
+      RESULTS[4], "\nStrand= ", RESULTS[5], "\nFrame= ", RESULTS[6], "\nLongest Amino Acid Sequence= ",
+      RESULTS[7])
+print("DNA devided into triplets = ", *[RESULTS[1][i:i + 3] for i in range(0, len(RESULTS[1]), 3)])
