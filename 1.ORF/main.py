@@ -74,18 +74,3 @@ AT = (1 - frequency / 100) / 2
 P = [AT, CG, AT, CG]
 
 print(find_largest_polypeptide_in_DNA(random_dna_sequence(length)))
-seq = Seq(random_dna_sequence(length))
-"""
-print("ASDADSADSADSADSADASDSADSADASDSAD")
-startP = re.compile('ATG')
-max_len = int(0);
-for strand, nuc in [(1, seq), (-1, seq.reverse_complement())]:
-    for frame in range(3):
-        for pro in nuc[frame:].translate(TABLE).split("*"):
-            if len(pro) >= max_len:
-                max_len = len(pro)
-                RESULTS = [pro[:30], pro[-3:], len(pro), strand, frame]
-                # print("%s...%s - length %i, strand %i, frame %i" % (pro[:30], pro[-3:], len(pro), strand, frame))
-print(seq)
-print(*RESULTS)
-"""
