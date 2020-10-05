@@ -30,19 +30,6 @@ def find_largest_polypeptide_in_DNA(seq, translationTable=1):
                     trans = ''
     return Data
 
-
-def complement(s):
-    """relationship between two structures"""
-    complement = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'}
-    letters = list(s)
-    letters = [complement[base] for base in letters]
-    return ''.join(letters)
-
-
-def revcomplement(s):
-    return complement(s[::-1])
-
-
 def random_dna_sequence(length):
     """Function generate random DNA with a certain probability"""
     return ''.join(np.random.choice(BASES, p=P) for _ in range(int(length)))
