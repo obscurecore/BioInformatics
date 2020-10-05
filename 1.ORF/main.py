@@ -1,4 +1,33 @@
 import numpy as np
+from Bio.Seq import Seq
+
+def find_largest_polypeptide_in_DNA(seq, translationTable=1):
+    # Set the record to start with, then try to beat it
+    longest_DNA = ''
+    longest_amino_acid_sequence = 0
+
+    for direction in [-1, 1]:
+        forward_DNA = seq[::direction]
+        # Check all three reading frames in this direction.
+        for frame in range(3):
+            trans = str(forward_DNA[frame:].translate(translationTable))
+            cut_codons = 0
+            while 'M' in trans:
+                codons_before_Met = trans.find('M')
+                cut_codons += codons_before_Met
+                trans = trans[codons_before_Met:]
+                if '*' in trans:
+                    length = trans.find('*') + 1
+                    if length > longest_amino_acid_sequence:
+                        longest_amino_acid_sequence = length
+                        first_bp = frame + 3*cut_codons
+                        last_bp = frame + 3*cut_codons + 3*(length)
+                        longest_DNA = str(forward_DNA[first_bp:last_bp+1])
+                    trans = trans[length:]
+                else:
+                    # Ignore sequence M... if ORF extends beyond FASTA?
+                    trans = ''
+    return longest_DNA
 
 
 def complement(s):
@@ -18,7 +47,11 @@ def random_dna_sequence(length):
     return ''.join(np.random.choice(BASES, p=P) for _ in range(length))
 
 
-BASES = ('A', 'C', 'T', 'G')  # constants
+# constants
+BASES = ('A', 'C', 'T', 'G')
+TABLE = 1
+MIN_PRO_LEN = 0
+RESULTS = []
 
 while True:
     length, frequency = input('Input length of DNA (numeric between 100 and 1000)'
@@ -37,6 +70,14 @@ AT = (1 - int(frequency) / 100) / 2
 """Probability. Rule of molecular biology"""
 P = [AT, CG, AT, CG]
 
-print(random_dna_sequence(int(length)))
-
-
+seq = Seq(random_dna_sequence(int(length)))
+max_len = int(0);
+for strand, nuc in [(1, seq), (-1, seq.reverse_complement())]:
+    for frame in range(3):
+        for pro in nuc[frame:].translate(TABLE).split("*"):
+            if len(pro) >= max_len:
+                max_len = len(pro)
+                RESULTS.append([pro[:30], pro[-3:], len(pro), strand, frame])
+                # print("%s...%s - length %i, strand %i, frame %i" % (pro[:30], pro[-3:], len(pro), strand, frame))
+print(seq)
+print(*RESULTS)
