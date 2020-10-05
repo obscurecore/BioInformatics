@@ -1,36 +1,34 @@
 import numpy as np
 from Bio.Seq import Seq
-import regex as re
 
 
 def find_largest_polypeptide_in_DNA(seq, translationTable=1):
     longest_DNA = ''
     longest_amino_acid_sequence = 0
-
-    for direction in [-1, 1]:
-        forward_DNA = Seq(seq[::direction])
+    Data = []
+    for strand, nuc in [(1, Seq(seq)), (-1, Seq(seq).reverse_complement())]:
         # Check all three reading frames in this direction.
         for frame in range(3):
-            trans = str(forward_DNA[frame:].translate(translationTable))
+            trans = str(nuc[frame:].translate(translationTable))
             cut_codons = 0
             while 'M' in trans:
                 codons_before_Met = trans.find('M')
                 cut_codons += codons_before_Met
-                print(trans)
                 trans = trans[codons_before_Met:]
                 if '*' in trans:
                     length = trans.find('*') + 1
                     if length > longest_amino_acid_sequence:
                         longest_amino_acid_sequence = length
-                        first_bp = frame + 3*cut_codons
-                        last_bp = frame + 3*cut_codons + 3*(length)
-                        longest_DNA = str(forward_DNA[first_bp:last_bp+1])
+                        first_bp = frame + 3 * cut_codons
+                        last_bp = frame + 3 * cut_codons + 3 * (length)
+                        longest_DNA = str(nuc[first_bp:last_bp + 1])
+                        Data = [trans, longest_DNA, length, first_bp, last_bp, strand, frame,
+                                longest_amino_acid_sequence]
                     trans = trans[length:]
                 else:
-                    # Ignore sequence M... if ORF extends beyond FASTA?
+                    # Ignore sequence M... if ORF extends beyond FASTA
                     trans = ''
-    return longest_DNA
-
+    return Data
 
 
 def complement(s):
@@ -48,9 +46,6 @@ def revcomplement(s):
 def random_dna_sequence(length):
     """Function generate random DNA with a certain probability"""
     return ''.join(np.random.choice(BASES, p=P) for _ in range(int(length)))
-
-
-
 
 
 # constants
@@ -78,9 +73,9 @@ AT = (1 - frequency / 100) / 2
 """Probability. Rule of molecular biology"""
 P = [AT, CG, AT, CG]
 
-find_largest_polypeptide_in_DNA(random_dna_sequence(length))
+print(find_largest_polypeptide_in_DNA(random_dna_sequence(length)))
 seq = Seq(random_dna_sequence(length))
-
+"""
 print("ASDADSADSADSADSADASDSADSADASDSAD")
 startP = re.compile('ATG')
 max_len = int(0);
@@ -93,3 +88,4 @@ for strand, nuc in [(1, seq), (-1, seq.reverse_complement())]:
                 # print("%s...%s - length %i, strand %i, frame %i" % (pro[:30], pro[-3:], len(pro), strand, frame))
 print(seq)
 print(*RESULTS)
+"""
