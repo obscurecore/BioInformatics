@@ -4,23 +4,33 @@ import regex as re
 
 
 def find_largest_polypeptide_in_DNA(seq, translationTable=1):
-    allPossibilities = []
-    for frame in range(3):
-        print("CHECK OUT")
-        print(str(Seq(seq[frame:]).translate(translationTable)))
-        print("STOP")
-    """
-      framePossibilitiesF = [i[i.find("M"):] for i in trans.split("*") if "M" in i]
-      allPossibilities += framePossibilitiesF
-  allPossibilitiesLengths = [len(i) for i in allPossibilities]
+    longest_DNA = ''
+    longest_amino_acid_sequence = 0
 
-  if len(allPossibilitiesLengths) == 0:
-      raise Exception("no candidate ORFs")
+    for direction in [-1, 1]:
+        forward_DNA = Seq(seq[::direction])
+        # Check all three reading frames in this direction.
+        for frame in range(3):
+            trans = str(forward_DNA[frame:].translate(translationTable))
+            cut_codons = 0
+            while 'M' in trans:
+                codons_before_Met = trans.find('M')
+                cut_codons += codons_before_Met
+                print(trans)
+                trans = trans[codons_before_Met:]
+                if '*' in trans:
+                    length = trans.find('*') + 1
+                    if length > longest_amino_acid_sequence:
+                        longest_amino_acid_sequence = length
+                        first_bp = frame + 3*cut_codons
+                        last_bp = frame + 3*cut_codons + 3*(length)
+                        longest_DNA = str(forward_DNA[first_bp:last_bp+1])
+                    trans = trans[length:]
+                else:
+                    # Ignore sequence M... if ORF extends beyond FASTA?
+                    trans = ''
+    return longest_DNA
 
-  proteinAsString = allPossibilities[allPossibilitiesLengths.index(max(allPossibilitiesLengths))]
-
-  return Seq(proteinAsString, alphabet=ProteinAlphabet)
-"""
 
 
 def complement(s):
@@ -38,6 +48,9 @@ def revcomplement(s):
 def random_dna_sequence(length):
     """Function generate random DNA with a certain probability"""
     return ''.join(np.random.choice(BASES, p=P) for _ in range(int(length)))
+
+
+
 
 
 # constants
@@ -65,10 +78,9 @@ AT = (1 - frequency / 100) / 2
 """Probability. Rule of molecular biology"""
 P = [AT, CG, AT, CG]
 
-
-
 find_largest_polypeptide_in_DNA(random_dna_sequence(length))
 seq = Seq(random_dna_sequence(length))
+
 print("ASDADSADSADSADSADASDSADSADASDSAD")
 startP = re.compile('ATG')
 max_len = int(0);
