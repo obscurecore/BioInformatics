@@ -1,7 +1,24 @@
 import numpy as np
 
+
+def complement(s):
+    """relationship between two structures"""
+    complement = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'}
+    letters = list(s)
+    letters = [complement[base] for base in letters]
+    return ''.join(letters)
+
+
+def revcomplement(s):
+    return complement(s[::-1])
+
+
+def random_dna_sequence(length):
+    """Function generate random DNA with a certain probability"""
+    return ''.join(np.random.choice(BASES, p=P) for _ in range(length))
+
+
 BASES = ('A', 'C', 'T', 'G')  # constants
-print(20 / 100 / 2, 20 / 100 / 2, (1 - 20 / 100) / 2, (1 - 20 / 100) / 2)
 
 while True:
     length, frequency = input('Input length of DNA (numeric between 100 and 1000)'
@@ -15,13 +32,11 @@ while True:
     else:
         break
 
-CG = frequency / 100 / 2
-AT = (1 - frequency / 100) / 2
-P = [AT, CG, AT, CG]  # probability
+CG = int(frequency) / 100 / 2
+AT = (1 - int(frequency) / 100) / 2
+"""Probability. Rule of molecular biology"""
+P = [AT, CG, AT, CG]
 
-def random_dna_sequence(length):
-    """Function generate random DNA with a certain probability"""
-    return ''.join(np.random.choice(BASES, p=P) for _ in range(length))
+print(random_dna_sequence(int(length)))
 
 
-print(random_dna_sequence(10))
