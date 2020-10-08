@@ -1,11 +1,10 @@
+import matplotlib.pyplot as plt
 import numpy as np
 from Bio.Seq import Seq
-import matplotlib.pyplot as plt
 
 # constants
-MAP, BASES, LENGHT, COUNT, StartGC, EndGC, TABLE, MIN_PRO_LEN = {}, ('A', 'C', 'T', 'G'), int(1_000), int(
-    1), int(20), int(80), int(1), int(10)
-Default = int(0);
+MAP, BASES, LENGHT, COUNT, StartGC, EndGC, TABLE, MIN_PRO_LEN = {}, ('A', 'C', 'T', 'G'), int(1_000), int(1), int(
+    20), int(80), int(1), int(10)
 
 
 def random_dna_sequence(length, frequency):
