@@ -1,5 +1,13 @@
 import numpy as np
 from Bio.Seq import Seq
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
+import plotly.graph_objs as go
+
+
+# constants
+MAP, BASES, LENGHT, COUNT, StartGC, EndGC, TABLE, MIN_PRO_LEN = {}, ('A', 'C', 'T', 'G'), int(1_000), int(
+    1_0), int(20), int(80), int(1), int(10)
+Default = int(0);
 
 
 def random_dna_sequence(length, frequency):
@@ -18,15 +26,11 @@ def find_orf(seq):
                 return True
 
 
-# constants
-BASES = ('A', 'C', 'T', 'G')
-LENGHT = int(1000)
-RESULTS = []
-MIN_PRO_LEN = int(10)
-TABLE = 1
-freq = int(30)
+for freq in range(StartGC, EndGC):
+    x = 0
+    for i in range(COUNT):
+        if find_orf(Seq(random_dna_sequence(LENGHT, freq))):
+            x += 1
+    MAP[freq] = x/COUNT*100
 
-
-print(random_dna_sequence(LENGHT, freq))
-print("SPACE")
-find_orf(Seq(random_dna_sequence(LENGHT, freq)))
+print(MAP)
