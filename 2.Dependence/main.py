@@ -3,7 +3,7 @@ import numpy as np
 from Bio.Seq import Seq
 
 # constants
-MAP, BASES, LENGHT, COUNT, StartGC, EndGC, TABLE, MIN_PRO_LEN = {}, ('A', 'C', 'T', 'G'), int(1_000), int(1), int(
+Dict, BASES, LENGHT, COUNT, StartGC, EndGC, TABLE, MIN_PRO_LEN = {}, ('A', 'C', 'T', 'G'), int(1_000), int(1), int(
     20), int(80), int(1), int(10)
 
 
@@ -29,8 +29,8 @@ for freq in range(StartGC, EndGC):
     for i in range(COUNT):
         if find_orf(Seq(random_dna_sequence(LENGHT, freq))):
             x += 1
-    MAP[freq] = x / COUNT * 100
+    Dict[freq] = x / COUNT * 100
 
 # Histogram
-plt.bar(list(MAP.keys()), MAP.values(), color='g')
+plt.bar(list(Dict.keys()), Dict.values(), color='g')
 plt.show()
