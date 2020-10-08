@@ -9,7 +9,7 @@ def find_largest_polypeptide_in_DNA(seq, translationTable=1):
     for strand, nuc in [(1, Seq(seq)), (-1, Seq(seq).reverse_complement())]:
         # Check all three reading frames in this direction.
         for frame in range(3):
-            trans = str(nuc[frame:].translate(translationTable))
+            trans = str(pad_seq(nuc[frame:]).translate(translationTable))
             cut_codons = 0
             while 'M' in trans:
                 codons_before_Met = trans.find('M')
@@ -29,6 +29,14 @@ def find_largest_polypeptide_in_DNA(seq, translationTable=1):
                     # Ignore sequence M... if ORF extends beyond FASTA
                     trans = ''
     return Data
+
+
+def pad_seq(sequence):
+    """ Pad sequence to multiple of 3 with N """
+
+    remainder = len(sequence) % 3
+
+    return sequence if remainder == 0 else sequence + Seq('N' * (3 - remainder))
 
 
 def random_dna_sequence(length):
@@ -62,8 +70,11 @@ AT = (1 - frequency / 100) / 2
 P = [AT, CG, AT, CG]
 
 RESULTS = find_largest_polypeptide_in_DNA(random_dna_sequence(length))
+print(RESULTS)
+"""
 print("TRANSLATION= ", RESULTS[0], "\nLength= ", RESULTS[2]
       , "\nFirstBP= ", RESULTS[3], "\nLastBP= ",
       RESULTS[4], "\nStrand= ", RESULTS[5], "\nFrame= ", RESULTS[6], "\nLongest Amino Acid Sequence= ",
       RESULTS[7])
-print("DNA devided into triplets = ", *[RESULTS[1][i:i + 3] for i in range(0, len(RESULTS[1]), 3)])
+      """
+print("DNA devided into triplets= ", *[RESULTS[1][i:i + 3] for i in range(0, len(RESULTS[1]), 3)])
