@@ -24,6 +24,7 @@ def find_orf(seq):
                 return True
 
 
+# Main
 for freq in range(StartGC, EndGC):
     x = 0
     for i in range(COUNT):
@@ -31,6 +32,6 @@ for freq in range(StartGC, EndGC):
             x += 1
     MAP[freq] = x / COUNT * 100
 
-# print(MAP)
+# Histogram
 plt.bar(list(MAP.keys()), MAP.values(), color='g')
 plt.show()
