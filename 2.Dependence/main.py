@@ -1,10 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from Bio.Seq import Seq
+import re
 
-# constants
-Dict, BASES, LENGHT, COUNT, StartGC, EndGC, TABLE, MIN_PRO_LEN = {}, ('A', 'C', 'T', 'G'), int(1_000), int(1), int(
+Dict, BASES, LENGHT, COUNT, StartGC, EndGC, TABLE, MIN_PRO_LEN = {}, ('A', 'C', 'T', 'G'), int(100), int(10), int(
     20), int(80), int(1), int(10)
+
+PATTERN = re.compile("ATG(?:...).*?(?:TAG|TGA|TAA)")
 
 
 def random_dna_sequence(length, frequency):
@@ -19,8 +21,10 @@ def random_dna_sequence(length, frequency):
 def find_orf(seq):
     for strand, nuc in [(1, seq), (-1, seq.reverse_complement())]:
         for frame in range(3):
-            if len(max(nuc[frame:].translate(TABLE).split("*"))) > MIN_PRO_LEN:
+            ORF = PATTERN.findall(str(nuc[frame:]))
+            if ORF and len(max(ORF)) > MIN_PRO_LEN:
                 return True
+            return False
 
 
 # Main
@@ -32,5 +36,5 @@ for freq in range(StartGC, EndGC):
     Dict[freq] = x / COUNT * 100
 
 # Histogram
-plt.bar(list(Dict.keys()), Dict.values(), color='g')
+plt.plot(list(Dict.keys()), Dict.values(), color='g')
 plt.show()
