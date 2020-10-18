@@ -1,1 +1,1 @@
-# FASTQ
+# Collecting fastq file statistics
