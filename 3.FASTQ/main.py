@@ -2,7 +2,7 @@ from Bio import SeqIO
 
 Q_SCORE, NUMBER_OF_NUC, REST, READ = int(0), int(0), int(0), int(0)
 
-for record in SeqIO.parse("test_example3.fastq", "fastq"):
+for record in SeqIO.parse(input('FILE = '), "fastq"):
     READ += 1
     for x in record.letter_annotations['phred_quality']:
         if x >= 30:
